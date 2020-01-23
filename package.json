@@ -5,10 +5,10 @@
   "main": "index.js",
   "module": "custom-element.js",
   "scripts": {
-    "build": "node tools/build.js",
+    "build": "aria-build -d -f es,umd --name custom-elements-ts",
     "start": "node tools/start.js",
     "bundle": "node tools/bundle.js",
-    "test": "aria test tests",
+    "test": "aria test --browser -d specs --check-coverage",
     "serve.coverage": "aria serve --test-coverage",
     "coveralls": "cat ./node_modules/.tmp/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
@@ -22,14 +22,8 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "@ngx-devtools/server": "beta",
-    "@types/jasmine": "2.8.8",
-    "@webcomponents/custom-elements": "1.2.2",
-    "aria-tools": "0.0.2",
     "coveralls": "^3.0.2",
-    "event-stream": "3.3.4",
-    "magic-string": "0.25.3",
-    "typescript": "^3.3.3333"
+    "magic-string": "0.25.3"
   },
   "typings": "index.d.ts",
   "contributors": [
