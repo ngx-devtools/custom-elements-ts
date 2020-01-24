@@ -1,68 +1,72 @@
-import { CustomElement } from 'custom-elements-ts';
+import { CustomElement } from 'custom-elements-ts'
+import { expect, assert } from 'chai'
 
-@CustomElement({
-  tag: 'basic-element',
-  template: '<span>my element</span>',
-  style: ':host{border:0}'
-})
-class BasicElement extends HTMLElement {}
+function createElement(tag: string) {
+  const element = document.createElement(tag)
+  document.body.appendChild(element)
+  return element
+}
 
 describe('basic test', () => {
-  let myElementInstance;
+  let element: HTMLElement
+
+  @CustomElement({
+    tag: 'basic-element',
+    template: '<span>my element</span>',
+    style: ':host{border:0}'
+  })
+  class BasicElement extends HTMLElement {}
 
   beforeEach(() => {
-    const myElement = document.createElement('basic-element');
-    myElementInstance = document.body.appendChild(myElement);
-  });
+    element = createElement('basic-element')
+  })
 
   afterEach(() => {
-    document.body.innerHTML = '';
-  });
+    document.body.removeChild(element)
+  })
 
   it('should load html template', () => {
-      expect(myElementInstance.shadowRoot.innerHTML).toContain('<span>my element</span>');
-  });
+      expect(element.shadowRoot.innerHTML).contain('<span>my element</span>');
+  })
 
   it('should load css', () => {
-    expect(myElementInstance.shadowRoot.querySelector('style').innerText).toContain(':host{border:0}');
-  });
+    const style = element.shadowRoot.querySelector('style')
+    expect(style.innerText).contain(':host{border:0}');
+  })
 
-  it('should have shadowroot', () => {
-    expect(myElementInstance.shadowRoot).toBeTruthy();
-  });
-
-});
-
-
-@CustomElement({
-  tag: 'shadow-false-element',
-  template: '<span>my element</span>',
-  style: ':host{border:0}',
-  shadow: false
+  it('should have shadowRoot', () => {
+    assert.ok(element.shadowRoot)
+  })
 })
-class ShadowFalseElement extends HTMLElement {}
 
 describe('basic test no shadowroot', () => {
-  let myElementInstance;
+  let element: HTMLElement
+
+  @CustomElement({
+    tag: 'shadow-false-element',
+    template: '<span>my element</span>',
+    style: ':host{border:0}',
+    shadow: false
+  })
+  class ShadowFalseElement extends HTMLElement {}
 
   beforeEach(() => {
-    const myElement = document.createElement('shadow-false-element');
-    myElementInstance = document.body.appendChild(myElement);
+    element = createElement('shadow-false-element')
   });
 
   afterEach(() => {
-    document.body.innerHTML = '';
-  });
+    document.body.removeChild(element)
+  })
 
   it('should load html template', () => {
-      expect(myElementInstance.innerHTML).toContain('<span>my element</span>');
-  });
+    expect(element.innerHTML).contain('<span>my element</span>');
+  })
 
   it('should have css', () => {
-    expect(myElementInstance.querySelector('style')).toBeTruthy();
-  });
+    assert.ok(element.querySelector('style'))
+  })
 
   it('shadow not have a shadowroot', () => {
-    expect(myElementInstance.shadowRoot).toBeFalsy();
-  });
+    expect(element.shadowRoot).to.be.null
+  })
 });

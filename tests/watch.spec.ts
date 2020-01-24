@@ -1,5 +1,9 @@
 import { CustomElement, Prop, Toggle, Watch } from 'custom-elements-ts';
 
+import * as sinon from 'sinon'
+import { expect, assert } from 'chai'
+
+
 @CustomElement({
   tag: 'watch-element',
   template: '<span>my element</span>',
@@ -64,55 +68,58 @@ class WatchElement extends HTMLElement {
 }
 
 describe('watch decorator', () => {
-  let myElementInstance;
+  let element;
 
   beforeEach(() => {
-    const myElement = document.createElement('watch-element');
-    myElementInstance = document.body.appendChild(myElement);
+    element = document.createElement('watch-element');
+    document.body.appendChild(element)
   });
 
   afterEach(() => {
-    document.body.innerHTML = '';
+    document.body.removeChild(element)
+    sinon.restore()
   });
 
   it('should re-render setting property', () => {
-    myElementInstance.name = 'Aivan';
-    expect(myElementInstance.shadowRoot.querySelector('span').innerHTML).toEqual('Aivan');
+    element.name = 'Aivan';
+    expect(element.shadowRoot.querySelector('span').innerHTML).to.equal('Aivan');
   });
 
   it('should call method decorated with @Watch on prop change', () => {
-    const watchSpy = spyOn(myElementInstance,'setSpan');
-    myElementInstance.name = 'Aivan';
-    expect(watchSpy).toHaveBeenCalled();
-  });
+    const watchSpy = sinon.spy(element,'setSpan')
+    
+    element.name = 'Aivan'
+    sinon.assert.called(watchSpy)
+  })
 
   it('should call method decorated with @Watch on prop change', () => {
-    const watchSpy = spyOn(myElementInstance,'setSpan');
-    myElementInstance.setAttribute('name', 'Mario');
-    expect(watchSpy).toHaveBeenCalledWith(...[{ old: null, new: 'Mario'}]);
-    expect(myElementInstance.name).toEqual('Mario');
+    const watchSpy = sinon.spy(element,'setSpan');
+    element.setAttribute('name', 'Mario');
+    
+    sinon.assert.calledWith(watchSpy, ...[{ old: null, new: 'Mario'}])
+    expect(element.name).to.equal('Mario');
   });
 
   it('should call @Watch on attribute change with new property value', () => {
-    myElementInstance.setAttribute('color', 'red');
-    expect(myElementInstance.newColor).toEqual('red');
+    element.setAttribute('color', 'red');
+    expect(element.newColor).to.equal('red');
   });
 
   it('should call @Watch for plain get/set with correct value.new', () => {
-    myElementInstance.setAttribute('label', 'Name');
-    expect(myElementInstance.newLabel).toEqual('Name');
+    element.setAttribute('label', 'Name');
+    expect(element.newLabel).to.equal('Name');
   });
 
   it('should call non kebab @Watch on kebab attribute change with new property value', () => {
-    myElementInstance.setAttribute('set-case', 'kebab');
-    expect(myElementInstance.setCase).toEqual('kebab');
-    expect(myElementInstance.caseChanged).toBeTruthy();
+    element.setAttribute('set-case', 'kebab');
+    expect(element.setCase).to.equal('kebab');
+    assert.ok(element.caseChanged)
   });
 
   it('should call kebab @Watch on kebab attribute change with new property value', () => {
-    myElementInstance.setAttribute('set-case', 'snake');
-    expect(myElementInstance.setCase).toEqual('snake');
-    expect(myElementInstance.caseChanged).toBeTruthy();
+    element.setAttribute('set-case', 'snake');
+    expect(element.setCase).to.equal('snake');
+    assert.ok(element.caseChanged)
   });
 
   it('should call @Watch on property change with new property value', () => {
@@ -126,14 +133,14 @@ describe('watch decorator', () => {
         link: '/user-interface/style-guides/logo'
       }
     ];
-    myElementInstance.menus = menus;
-    expect(myElementInstance.menus).toEqual(menus);
-    expect(myElementInstance.menuChanged).toBeTruthy();
+    element.menus = menus;
+    expect(element.menus).to.equal(menus);
+    assert.ok(element.menuChanged)
   });
 
   it('should call @Watch on toggle attribute with new property value', () => {
-    myElementInstance.enabled = true;
-    expect(myElementInstance.enabledChanged).toBeTruthy();
+    element.enabled = true
+    assert.ok(element.enabledChanged)
   });
 
 });

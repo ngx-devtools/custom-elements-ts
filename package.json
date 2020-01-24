@@ -6,10 +6,7 @@
   "module": "custom-element.js",
   "scripts": {
     "build": "aria-build -d -f es,umd --name custom-elements-ts",
-    "start": "node tools/start.js",
-    "bundle": "node tools/bundle.js",
-    "test": "aria test --browser -d specs --check-coverage",
-    "serve.coverage": "aria serve --test-coverage",
+    "test": "aria test --browser -d tests --check-coverage",
     "coveralls": "cat ./node_modules/.tmp/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "keywords": [
@@ -21,6 +18,9 @@
     "typescript"
   ],
   "license": "MIT",
+  "peerDependencies": {
+    "magic-string": "0.25.3"
+  },
   "devDependencies": {
     "coveralls": "^3.0.2",
     "magic-string": "0.25.3"

@@ -1,4 +1,6 @@
-import { CustomElement, Toggle, Watch } from 'custom-elements-ts';
+import { CustomElement, Toggle } from 'custom-elements-ts';
+
+import { expect } from 'chai'
 
 @CustomElement({})
 class ToggleElement extends HTMLElement {
@@ -8,69 +10,69 @@ class ToggleElement extends HTMLElement {
 }
 
 describe('toggle decorator', () => {
-  let myElementInstance;
+  let element;
 
   beforeEach(() => {
-    const myElement = document.createElement('toggle-element');
-    myElementInstance = document.body.appendChild(myElement);
+    element = document.createElement('toggle-element')
+    document.body.appendChild(element)
   });
 
   afterEach(() => {
-    document.body.innerHTML = '';
+    document.body.removeChild(element)
   });
 
   it('should return false on no attribute set', () => {
-    expect(myElementInstance.disabled).toBe(false);
+    expect(element.disabled).to.deep.equal(false);
   });
 
   it('should return true on empty attribute set', () => {
-    myElementInstance.setAttribute('disabled','');
-    expect(myElementInstance.disabled).toBe(true);
+    element.setAttribute('disabled','');
+    expect(element.disabled).to.deep.equal(true);
   });
 
   it('should return false on remove attribute', () => {
-    myElementInstance.removeAttribute('disabled');
-    expect(myElementInstance.disabled).toBe(false);
+    element.removeAttribute('disabled');
+    expect(element.disabled).to.deep.equal(false);
   });
 
   it('should return value on attribute set', () => {
-    myElementInstance.setAttribute('disabled','true');
-    expect(myElementInstance.disabled).toBe(true);
-    myElementInstance.setAttribute('disabled','false');
-    expect(myElementInstance.disabled).toBe(false);
+    element.setAttribute('disabled','true');
+    expect(element.disabled).to.deep.equal(true);
+    element.setAttribute('disabled','false');
+    expect(element.disabled).to.deep.equal(false);
   });
 
   it('should return false on random string attribute set', () => {
     let warn = console.warn;
     // suppressing warn
     console.warn = () => {};
-    myElementInstance.setAttribute('disabled','asd');
-    expect(myElementInstance.disabled).toBe(false);
+    element.setAttribute('disabled','asd');
+    expect(element.disabled).to.deep.equal(false);
     console.warn = warn;
   });
 
   it('should add attribute on empty prop set', () => {
-    myElementInstance.disabled = '';
-    expect(myElementInstance.hasAttribute('disabled')).toBe(true);
+    element.disabled = '';
+    expect(element.hasAttribute('disabled')).to.deep.equal(true);
   });
 
   it('should remove attribute on null prop set', () => {
-    myElementInstance.disabled = null;
-    expect(myElementInstance.hasAttribute('disabled')).toBe(false);
+    element.disabled = null;
+    expect(element.hasAttribute('disabled')).to.deep.equal(false);
   });
 
   it('should reflect prop to attribute', () => {
-    myElementInstance.disabled = true;
-    expect(myElementInstance.getAttribute('disabled')).toBe('true');
-    myElementInstance.disabled = false;
-    expect(myElementInstance.getAttribute('disabled')).toBe('false');
+    element.disabled = true;
+    expect(element.getAttribute('disabled')).to.deep.equal('true');
+    element.disabled = false;
+    expect(element.getAttribute('disabled')).to.deep.equal('false');
   });
 
   it('should reflect random string prop to attribute as false', () => {
     const warn = console.warn;
     console.warn = () => {};
-    myElementInstance.disabled = 'asd';
-    expect(myElementInstance.getAttribute('disabled')).toBe('false');
+    element.disabled = 'asd';
+    expect(element.getAttribute('disabled')).to.deep.equal('false');
     console.warn = warn;
   });
 
