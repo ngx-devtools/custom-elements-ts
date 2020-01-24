@@ -1,4 +1,5 @@
 import { CustomElement, Toggle, Prop, Watch } from 'custom-elements-ts';
+import { expect, assert } from 'chai'
 
 @CustomElement({})
 class InitElement extends HTMLElement {
@@ -21,40 +22,40 @@ class InitElement extends HTMLElement {
 }
 
 describe('init state', () => {
-  let myElement;
+  let myElement: any
 
   beforeEach(() => {
     myElement = document.createElement('init-element');
   });
 
   afterEach(() => {
-    document.body.innerHTML = '';
+    document.body.innerHTML = ''
   });
 
   it('should set attribute based on default prop value on init', () => {
     const element = document.body.appendChild(myElement);
-    expect(element.getAttribute('color')).toBe('blue');
+    expect(element.getAttribute('color')).equal('blue');
   });
 
   it('should set default prop value on init', () => {
     const element = document.body.appendChild(myElement);
-    expect(element.color).toBe('blue');
+    expect(element.color).equal('blue');
   });
 
   it('should set attribute based on default toggle value on init', () => {
     const element = document.body.appendChild(myElement);
-    expect(element.hasAttribute('disabled')).toBe(true);
+    expect(element.hasAttribute('disabled')).equal(true);
   });
 
   it('should set default toggle value on init', () => {
     const element = document.body.appendChild(myElement);
-    expect(element.disabled).toBe(true);
+    expect(element.disabled).equal(true);
   });
 
   it('should reflect attribute to props on init', () => {
     myElement.setAttribute('color','red');
     const element = document.body.appendChild(myElement);
-    expect(element.color).toBe('red');
+    expect(element.color).equal('red');
   });
 
   it('should not set attribute on second element instance', () => {
@@ -64,32 +65,32 @@ describe('init state', () => {
       <init-element></init-element>
     `;
     const initElements: any = document.body.querySelectorAll('init-element');
-    expect(initElements[1].icon).toBeFalsy();
-    expect(initElements[2].icon).toBeFalsy();
+    expect(initElements[1].icon).to.be.null
+    expect(initElements[2].icon).to.be.null
   });
 
   it('should reflect has attribute to toggle on init', () => {
     myElement.setAttribute('disabled','');
     const element = document.body.appendChild(myElement);
-    expect(element.disabled).toBe(true);
+    expect(element.disabled).equal(true);
   });
 
   it('should reflect true attribute to toggle on init', () => {
     myElement.setAttribute('disabled','true');
     const element = document.body.appendChild(myElement);
-    expect(element.disabled).toBe(true);
+    expect(element.disabled).equal(true);
   });
 
   it('should reflect false attribute to toggle on init', () => {
     myElement.setAttribute('disabled','false');
     const element = document.body.appendChild(myElement);
-    expect(element.disabled).toBe(false);
+    expect(element.disabled).equal(false);
   });
 
   it('should execute watch of attribute on init', () => {
     myElement.setAttribute('icon','test');
     const element = document.body.appendChild(myElement);
-    expect(element.setIcon).toBe(true);
+    expect(element.setIcon).equal(true);
   });
 
 });
