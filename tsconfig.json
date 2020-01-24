@@ -5,6 +5,8 @@
     "experimentalDecorators": true,
     "allowJs": true,
     "outDir": "dist",
+    "target": "es2015",
+    "moduleResolution": "node",
     "paths": {
       "custom-elements-ts": [ "./src/index" ]
     }
