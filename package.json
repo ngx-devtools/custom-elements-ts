@@ -2,10 +2,10 @@
   "name": "custom-elements-ts",
   "version": "0.0.16",
   "description": "Create native Custom Elements using Typescript without using any third party libraries",
-  "main": "index.js",
   "module": "custom-element.js",
   "scripts": {
-    "build": "aria-build -d -f es,umd --name custom-elements-ts",
+    "build": "aria build -d -f es,umd --name custom-elements-ts",
+    "build.demo": "aria build -f es,umd --sourcemap --compress umd --name custom-elements-ts -i ./demos/counter/counter.element.ts -o ./public",
     "test": "aria test --browser -d tests --check-coverage",
     "coveralls": "cat ./node_modules/.tmp/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
@@ -25,7 +25,6 @@
     "coveralls": "^3.0.2",
     "magic-string": "0.25.3"
   },
-  "typings": "index.d.ts",
   "contributors": [
     "Aivan Monceller",
     "Arjay Elbore",

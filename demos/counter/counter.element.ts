@@ -1,9 +1,9 @@
-import { CustomElement, Watch, Prop, Listen, Dispatch, DispatchEmitter } from 'custom-elements-ts';
+import { CustomElement, Watch, Prop, Listen, Dispatch, DispatchEmitter } from 'custom-elements-ts'
 
 @CustomElement({
   tag: 'cts-counter',
   templateUrl: './counter.element.html',
-  styleUrl: './counter.element.scss'
+  styleUrl: './counter.element.css'
 })
 export class CounterElement extends HTMLElement {
 
