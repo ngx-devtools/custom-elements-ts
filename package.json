@@ -4,7 +4,7 @@
   "description": "Create native Custom Elements using Typescript without using any third party libraries",
   "module": "custom-element.js",
   "scripts": {
-    "build": "aria-build -d -f es,umd --name custom-elements-ts",
+    "build": "aria-build -d -f es,umd --name customElementsTs",
     "build.demo": "aria-build -f es,umd --compress umd --name custom-elements-ts -i ./demos/counter/counter.element.ts -o ./public",
     "test": "aria-mocha --browser -d tests --check-coverage",
     "coveralls": "cat ./node_modules/.tmp/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
