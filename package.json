@@ -4,7 +4,7 @@
   "description": "Create native Custom Elements using Typescript without using any third party libraries",
   "module": "custom-element.js",
   "scripts": {
-    "build": "aria-build -d -f es,umd --name customElementsTs",
+    "build": "aria-build -d -f es,umd --name cets",
     "build.demo": "aria-build -f es,umd --compress umd --name custom-elements-ts -i ./demos/counter/counter.element.ts -o ./public",
     "test": "aria-mocha --browser -d tests --check-coverage",
     "coveralls": "cat ./node_modules/.tmp/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
@@ -22,15 +22,15 @@
     "magic-string": ">= 0.25.6"
   },
   "devDependencies": {
-    "@types/sinon": "^7.5.1",
-    "aria-build": "^0.1.0",
-    "aria-fs": "^0.1.0",
-    "aria-mocha": "^0.1.0",
-    "aria-mocha-headless": "^0.1.0",
+    "@types/sinon": "^7.5.2",
+    "aria-build": "^0.2.0",
+    "aria-fs": "^0.2.0",
+    "aria-mocha": "^0.2.0",
+    "aria-mocha-headless": "^0.2.0",
     "coveralls": "^3.0.9",
     "magic-string": "0.25.6",
-    "sinon": "^8.1.1",
-    "typescript": "^3.7.4"
+    "sinon": "^9.0.0",
+    "typescript": "^3.8.2"
   },
   "contributors": [
     "Aivan Monceller",
