@@ -1,6 +1,7 @@
 import * as ts from 'typescript'
-import * as path from 'path'
 import * as fs from 'fs'
+
+import { resolve, dirname } from 'path'
 
 function buildSass(content: string, srcFile: string): string {
   const nodeSassOptions = { data: content, file: srcFile, outputStyle: 'compressed' }
@@ -9,56 +10,40 @@ function buildSass(content: string, srcFile: string): string {
       : content;
 }
 
-function createTemplate(filePath: string, property: ts.PropertyAssignment) {
+function inlineHTML(file: string, property: ts.PropertyAssignment) {
   property.name = ts.createIdentifier('template')
-  const templateUrl = property.initializer.getText().replace(/'/g, '')
-  const templateFullPath = path.resolve(path.dirname(filePath), templateUrl)
+  const templateUrl = property.initializer.getText().replace(/'|"/g, '')
+  const templateFullPath = resolve(dirname(file), templateUrl)
   property.initializer = ts.createStringLiteral(fs.readFileSync(templateFullPath, 'utf8'))
-  return property
 }
 
-function createStyle(filePath: string, property: ts.PropertyAssignment) {
+function inlineStyle(file: string, property: ts.PropertyAssignment) {
   property.name = ts.createIdentifier('style')
-  const styleUrl = property.initializer.getText().replace(/'/g, '')
-  const styleFullPath = path.resolve(path.dirname(filePath), styleUrl)
+  const styleUrl = property.initializer.getText().replace(/'|"/g, '')
+  const styleFullPath = resolve(dirname(file), styleUrl)
   const content = buildSass(fs.readFileSync(styleFullPath, 'utf8'), styleFullPath)
   property.initializer = ts.createStringLiteral(content)
-  return property
 }
 
-function inlineTemplateProperties(filePath: string, properties: ts.NodeArray<ts.ObjectLiteralElementLike>) {
-  return properties.map(property => {   
-    if (ts.isPropertyAssignment(property)) {
-      if (property.getText().includes('templateUrl')) {
-        return createTemplate(filePath, property)
-      }
-      if (property.getText().includes('styleUrl')) {
-        return createStyle(filePath, property)
-      }
-    }
-    return property
-  }) 
+function inline(file: string, property: ts.PropertyAssignment) {
+  const text = property.getText()
+  text.includes('templateUrl') && inlineHTML(file, property)
+  text.includes('styleUrl') && inlineStyle(file, property)
 }
 
-export function inlineTemplate(filePath) {
-  return (context) => {
-    const visitor = (node) => {
-      if (Array.isArray(node.statements)) {
-        node.statements.map(statement => {
-          if (ts.isClassDeclaration(statement)) {
-            statement.decorators.map(decorator => {
-              /// @ts-ignore
-              decorator.expression.arguments.map(argument => {
-                if (ts.isObjectLiteralExpression(argument)) {
-                  /// @ts-ignore
-                  argument.properties = [ ...inlineTemplateProperties(filePath, argument.properties) ]
-                }
-                return argument
-              })
+export function inlineTemplate(file: string) {
+  return (context: ts.TransformationContext) => {
+    const visitor = (node: ts.Node) => {
+      if (ts.isClassDeclaration(node) && Array.isArray(node.decorators)) {
+        node.decorators.forEach(decorator => {
+          const expression = (decorator.expression as ts.CallExpression)
+          if (expression.expression.getText().includes('CustomElement')) {
+            expression.arguments.forEach(argument => {
+              ts.isObjectLiteralExpression(argument) 
+                && argument.properties.forEach((property: ts.PropertyAssignment) => inline(file, property))
             })
           }
-          return statement
-        })
+        }) 
       }
       return ts.visitEachChild(node, (child) => visitor(child), context);
     }

@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "dist",
+    "moduleResolution": "node",
+    "target": "es2018",
+    "module": "commonjs",
+    "lib" :[
+      "dom",
+      "es2015",
+      "es2017",
+      "es2018",
+      "es2019"
+    ]
+  }
+}

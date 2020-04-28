@@ -1,38 +1,25 @@
-import * as ts from 'typescript'
-import * as path from 'path'
+/* istanbul ignore file */
+
+import { join, resolve } from 'path'
 
 import MagicString from 'magic-string'
-import { inlineTemplate } from './inline-template'
+import { transform } from './transform'
 
-const transpile = (filePath: string, source: string) => {
-  const { outputText, sourceMapText } = ts.transpileModule(source, {
-    compilerOptions: {
-      module: ts.ModuleKind.ES2015, 
-      target: ts.ScriptTarget.ES2018,
-      skipLibCheck: true,
-      skipDefaultLibCheck: true,
-      strictNullChecks: false,
-      sourceMap: true
-    },
-    transformers: { 
-      before: [ inlineTemplate(filePath) ]  
-    }
-  })
-  return { code: outputText, map: sourceMapText }
+function transformCode(code: string) {
+  const magicString = new MagicString(code)
+  return { 
+    code: magicString.toString(), 
+    map: magicString.generateMap({ hires: true })  
+  }
 }
 
 export function inlineTemplateTransform() {
   return {
     name: 'inlineTemplateTransform',    
     transform (code: string, id: string) {  
-      const magicString = new MagicString(code);
-      if (!id.includes(path.join(path.resolve(), 'node_modules'))) {
-        return transpile(id, magicString.toString())
-      }
-      return { 
-        code: magicString.toString(),
-        map: magicString.generateMap({ hires: true })
-      }
+      return (!id.includes(join(resolve(), 'node_modules')))
+        ? transform(id, code)
+        : transformCode(code)
     }
   }
 }

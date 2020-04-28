@@ -10,5 +10,8 @@
     "paths": {
       "custom-elements-ts": [ "./src/index" ]
     }
-  }
+  },
+  "include": [  
+    "plugins/**/*"
+  ]
 }
