@@ -1,26 +1,27 @@
-import { TSRollupConfig, clean, build, copyPackageFile, copyReadMeFile, writeFile, symlinkDir } from 'aria-build'
+import { ebuild, TSRollupConfig, clean, copyPackageFile, copyReadMeFile, writeFile, symlinkDir } from 'aria-build'
 
 (async function() {
-  const options: TSRollupConfig[] = [
+  const tsconfig = {
+    compilerOptions: {
+      declaration: true
+    }
+  }
+
+  const config: TSRollupConfig[] = [
     {
       input: './src/index.ts',
-      output: {
-        format: 'umd',
-        name: 'customElementsTs',
-        file: './dist/custom-elements-ts.umd.js'
-      }
-    },
-    {
-      input: './src/index.ts',
-      output: {
-        format: 'es',
-        file: './dist/custom-elements-ts.js'
-      },
-      tsconfig: {
-        compilerOptions: {
-          declaration: true
+      output: [
+        {
+          format: 'umd',
+          name: 'customElementsTs',
+          file: './dist/custom-elements-ts.umd.js'
+        },
+        {
+          format: 'es',
+          file: './dist/custom-elements-ts.js'
         }
-      }
+      ],
+      tsconfig
     },
     {
       input: './plugins/inline-template-plugin.ts',
@@ -29,16 +30,12 @@ import { TSRollupConfig, clean, build, copyPackageFile, copyReadMeFile, writeFil
         format: 'cjs',
         file: './dist/plugins/inline-template-plugin.js'
       },
-      tsconfig: {
-        compilerOptions: {
-          declaration: true
-        }
-      }
+      tsconfig
     }
   ]
 
   await clean('dist')
-  await build(options)
+  await ebuild({ config })
   await Promise.all([ 
     copyPackageFile(), 
     copyReadMeFile(), 

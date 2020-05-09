@@ -4,7 +4,7 @@
   "description": "Create native Custom Elements using Typescript without using any third party libraries",
   "module": "custom-element.js",
   "scripts": {
-    "build": "ts-node --project ./tools/tsconfig.json ./tools/build.ts",
+    "build": "ts-node --project ./tools/tsconfig.json ./tools/bundle.ts",
     "build.demo": "ts-node --project ./tools/tsconfig.json ./tools/counter.ts",
     "test": "aria-mocha --browser -d tests --check-coverage",
     "test.plugins": "aria-mocha -d ./plugins --check-coverage",
@@ -22,10 +22,10 @@
   "devDependencies": {
     "@types/express": "^4.17.6",
     "@types/sinon": "^9.0.0",
-    "aria-build": "^0.2.2",
-    "aria-fs": "^0.2.2",
-    "aria-mocha": "^0.2.2",
-    "aria-mocha-headless": "^0.2.2",
+    "aria-build": "^0.3.0",
+    "aria-fs": "^0.3.0",
+    "aria-mocha": "^0.3.0",
+    "aria-mocha-headless": "^0.3.0",
     "coveralls": "^3.1.0",
     "express": "^4.17.1",
     "magic-string": "0.25.7",
