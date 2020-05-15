@@ -4,7 +4,7 @@
   "description": "Create native Custom Elements using Typescript without using any third party libraries",
   "module": "custom-element.js",
   "scripts": {
-    "build": "ts-node --project ./tools/tsconfig.json ./tools/bundle.ts",
+    "build": "ts-node --project ./tools/tsconfig.json ./tools/build.ts",
     "build.demo": "ts-node --project ./tools/tsconfig.json ./tools/counter.ts",
     "test": "aria-mocha --browser -d tests --check-coverage",
     "test.plugins": "aria-mocha -d ./plugins --check-coverage",

@@ -1,4 +1,8 @@
-import { ebuild, TSRollupConfig, clean, copyPackageFile, copyReadMeFile, writeFile, symlinkDir } from 'aria-build'
+import { 
+  esbuild, clean, mkdir, TSRollupConfig, 
+  esbuildDts, copyPackageFile, copyReadMeFile, 
+  writeFile, symlinkDir, DEFAULT_VALUES
+} from 'aria-build'
 
 (async function() {
   const tsconfig = {
@@ -25,7 +29,12 @@ import { ebuild, TSRollupConfig, clean, copyPackageFile, copyReadMeFile, writeFi
     },
     {
       input: './plugins/inline-template-plugin.ts',
-      external: [ "typescript", "node-sass", "magic-string"  ],
+      external: [ 
+        "typescript", 
+        "node-sass", 
+        "magic-string",
+        ...DEFAULT_VALUES.ROLLUP_EXTERNALS 
+      ],
       output: {
         format: 'cjs',
         file: './dist/plugins/inline-template-plugin.js'
@@ -34,12 +43,16 @@ import { ebuild, TSRollupConfig, clean, copyPackageFile, copyReadMeFile, writeFi
     }
   ]
 
+  const args = { config, esbuild: true  }
+
   await clean('dist')
-  await ebuild({ config })
+  await mkdir('dist')
   await Promise.all([ 
+    esbuild(args),
+    esbuildDts(args),
     copyPackageFile(), 
     copyReadMeFile(), 
-    writeFile('./dist/custom-elements-ts.d.ts', `export * from './src/index'`) 
+    writeFile('./dist/custom-elements-ts.d.ts', `export * from './src/index'`),
+    symlinkDir('./dist', './node_modules/custom-elements-ts')
   ])
-  await symlinkDir('./dist', './node_modules/custom-elements-ts')
 })()
